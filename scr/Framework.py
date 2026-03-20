@@ -359,11 +359,6 @@ def hybrid_stacking(X, n_folds=5, n_runs=5, random_state=42, bias_factor=-3.5):
     print(f"Best result: {np.max(auprs):.4f}")
     print(f"Methodology: 5-fold CV averaged over {n_runs} runs with different seeds")
     
-    # --------------------------------------------------
-    # Compute and aggregate additional metrics across runs
-    # For each run, compute metrics using the final prediction matrix
-    # then compute mean and std for each metric across runs.
-    # --------------------------------------------------
     print(f"\n{'='*70}")
     print("AGGREGATED METRICS ACROSS RUNS")
     print(f"{'='*70}")
@@ -373,7 +368,6 @@ def hybrid_stacking(X, n_folds=5, n_runs=5, random_state=42, bias_factor=-3.5):
         metrics_dict, _ = compute_all_metrics(X, r['final_matrix'], k=15, beta=1.0)
         per_run_metrics.append(metrics_dict)
 
-    # collect all metric keys
     keys = sorted({k for d in per_run_metrics for k in d.keys()})
     summary = {}
     for k in keys:
@@ -383,7 +377,6 @@ def hybrid_stacking(X, n_folds=5, n_runs=5, random_state=42, bias_factor=-3.5):
         summary[k] = {'mean': mean_v, 'std': std_v}
         print(f"  {k}: mean={mean_v:.4f}, std={std_v:.4f}")
 
-    # attach summary to best_run for downstream use
     best_run['metrics_summary'] = summary
 
     return best_run, all_runs_results
